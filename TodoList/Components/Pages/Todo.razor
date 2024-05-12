@@ -1,0 +1,62 @@
+﻿@page "/"
+@using TodoList.Models
+@rendermode InteractiveServer
+
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .todo-item {
+        margin: 10px 0;
+        padding: 10px;
+    }
+
+    .todo-item input[type="checkbox"] {
+        margin-right: 10px;
+    }
+    
+    .todo-item button {
+        margin-left: 10px;
+    }
+</style>
+
+<h3>Todo List</h3>
+
+<div>
+    <input type="text" @bind="_newTodo" />
+    <button @onclick="AddTodo" class="btn btn-primary">Add Todo</button>
+</div>
+
+<ul >
+    @foreach (var todo in _todoItems)
+    {
+        <li class="todo-item">
+            <input type="checkbox" @bind="todo.IsDone">
+            <span><b>@todo.Title</b></span>
+            
+            <button class="btn btn-danger" @onclick="() => _todoItems.Remove(todo)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </li>
+    }
+</ul>
+
+@code {
+    private readonly List<TodoItem> _todoItems = [];
+    private string _newTodo = string.Empty;
+
+    private void AddTodo()
+    {
+        if (string.IsNullOrWhiteSpace(_newTodo))
+            return;
+        
+        _todoItems.Add(new TodoItem
+        {
+            Title = _newTodo
+        });
+        
+        _newTodo = string.Empty;
+    }
+}
